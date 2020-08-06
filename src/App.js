@@ -1,24 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import 'semantic-ui-css/semantic.min.css'
+
+import {Container, Header, Button, Input} from 'semantic-ui-react'
+
+import { TypeChooser } from "react-stockcharts/lib/helper";
+
+import Chart from './Chart';
+import { getData } from "./utils"
+
+class ChartComponent extends React.Component {
+	componentDidMount() {
+		getData().then(data => {
+			this.setState({ data })
+		})
+	}
+	render() {
+		if (this.state == null) {
+			return <div>Loading...</div>
+		}
+		return (
+			<TypeChooser>
+				{type => <Chart type={type} data={this.state.data} />}
+			</TypeChooser>
+		)
+	}
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{padding: 20}} className="App">
+      <Container>
+        <Header style={{fontSize: 70}}>deeprofit</Header>
+        <Input size="massive" icon='chart' placeholder='Input a stock...'>
+        </Input>
+        <Button size="massive">Go</Button>
+        <p></p>
+      <ChartComponent/>
+      </Container>
     </div>
   );
 }
